@@ -1,0 +1,8 @@
+/node_modules
+.dockerignore
+api.http
+test.html
+storage/
+storage/Act!/
+.env
+src/config/config.json
