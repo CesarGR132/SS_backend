@@ -8,7 +8,7 @@ dotenv.config()
 
 const upload = multer()
 
-const storagePath = process.env.STORAGE_PATH || '../../storage'
+const storagePath = process.env.STORAGE_PATH || '../../Almacenamiento'
 const configPath = process.env.CONFIG_JSON || '../config/config.json'
 const absoluteConfigPath = path.resolve(configPath)
 
@@ -112,7 +112,7 @@ export const removeFile = async (req, res) => {
   const { filename, filepath } = req.body
   try {
     const verifyIfExists = SystemManager.verifyIfExistsInCurrentNode(filename, filepath)
-    if (verifyIfExists) {
+    if (!verifyIfExists) {
       return res.status(400).json({ error: 'File does not exist' })
     }
     SystemManager.removeFile(filename, filepath)

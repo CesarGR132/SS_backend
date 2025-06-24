@@ -7,7 +7,7 @@ import { itemPathBuilder } from '../utils/pathManager.js'
 dotenv.config()
 
 const configPath = path.resolve(process.env.CONFIG_JSON || '../config/config.json')
-const storagePath = path.resolve(process.env.STORAGE_PATH || './storage')
+const storagePath = path.resolve(process.env.STORAGE_PATH || './Almacenamiento')
 export class FileSystem {
   constructor () {
     this.root = new FileNode('root', true)
@@ -131,8 +131,7 @@ export class FileSystem {
 
   removeFile (filename, currentPath) {
     try {
-      const itemPath = itemPathBuilder(filename, currentPath
-      )
+      const itemPath = itemPathBuilder(filename, currentPath)
       fs.unlinkSync(itemPath)
       return true
     } catch (err) {

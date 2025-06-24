@@ -2,7 +2,7 @@
 .dockerignore
 api.http
 test.html
-storage/
+Almacenamiento/
 storage/Act!/
 .env
 src/config/config.json
