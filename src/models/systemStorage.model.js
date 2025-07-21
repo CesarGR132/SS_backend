@@ -2,6 +2,7 @@ import { FileNode } from './storage.model.js'
 import path from 'path'
 import fs from 'fs'
 import dotenv from 'dotenv'
+import { getFileData } from '../utils/getMetadata.js'
 import { itemPathBuilder } from '../utils/pathManager.js'
 
 dotenv.config()
@@ -26,7 +27,8 @@ export class FileSystem {
     const stats = fs.statSync(localPath)
     if (stats.isDirectory()) {
       const dirNodePath = localPath + '/' + path.basename(localPath) + '/'
-      const node = new FileNode(path.basename(localPath), true, dirNodePath)
+      const creationDate = new Date(stats.birthtime).toLocaleString('es-MX', { year: 'numeric', month: '2-digit', day: '2-digit' })
+      const node = new FileNode(path.basename(localPath), true, dirNodePath, creationDate, stats.size)
       const items = fs.readdirSync(localPath)
       items.forEach(item => {
         const itemPath = path.join(localPath, item)
@@ -36,16 +38,25 @@ export class FileSystem {
       return node
     }
     let content = null
+    let size = 0
+    let type = ''
+    let creationDate = ''
+    let owner = ' '
 
     try {
       if (stats.size < 1024 * 1024) {
-        content = fs.readFileSync(localPath, 'utf8')
+        content = fs.readFileSync(localPath, 'utf8') 
+        const fileData = getFileData(localPath)
+        size = fileData.size
+        type = fileData.type
+        creationDate = new Date(fileData.creationDate).toLocaleString('es-MX', { year: 'numeric', month: '2-digit', day: '2-digit' })
+        owner = fileData.owner
       }
     } catch (err) {
       content = null
     }
 
-    return new FileNode(path.basename(localPath), false, localPath, content)
+    return new FileNode(path.basename(localPath), false, localPath, creationDate, size, type, owner)
   }
 
   // Listener for changes in the local directory

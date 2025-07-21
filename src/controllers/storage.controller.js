@@ -3,6 +3,7 @@ import path from 'path'
 import dotenv from 'dotenv'
 import multer from 'multer'
 import { FileSystem } from '../models/systemStorage.model.js'
+import { getFileData } from '../utils/getMetadata.js'
 
 dotenv.config()
 
@@ -26,6 +27,11 @@ export const getFile = async (req, res) => {
         error: 'Sorry, We have problems with the file you are looking for. Please try again later.'
       })
     }
+    const fileData = getFileData(filepath)
+    res.setHeader('Owner', fileData.owner.toString(10))
+    res.setHeader('Type', fileData.type)
+    res.setHeader('Size', fileData.size)
+    res.setHeader('Creation-Date', fileData.creationDate)
     res.sendFile(filepath)
   } catch (error) {
     console.error('Error sending file:', error)
